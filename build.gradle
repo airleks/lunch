@@ -1,0 +1,77 @@
+group 'com.test'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'http://repo.spring.io/plugins-snapshot'
+        }
+        maven {
+            url 'http://repo.spring.io/plugins-release'
+        }
+        maven {
+            url 'http://repo.spring.io/snapshot'
+        }
+    }
+
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.2.7.RELEASE'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'idea'
+//apply plugin: 'propdeps'
+
+jar {
+    baseName = 'lunch'
+    version = '1.0'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations { provided }
+sourceSets { main { compileClasspath += configurations.provided } }
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url 'http://repo.spring.io/plugins-release'
+    }
+    maven {
+        url 'http://repo.spring.io/snapshot'
+    }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+    compile 'com.google.guava:guava:18.0'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    provided 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    compile 'org.springframework.boot:spring-boot-starter-actuator:1.2.7.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web:1.2.3.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa:1.2.3.RELEASE'
+    compile 'com.h2database:h2'
+    compile 'mysql:mysql-connector-java:5.1.36'
+    compile 'org.hibernate:hibernate-validator:4.3.2.Final'
+
+    compile 'org.springframework.boot:spring-boot-starter-security:1.2.3.RELEASE'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.2.2.RELEASE'
+
+    testCompile 'org.codehaus.groovy:groovy-all:2.4.4:indy'
+    testCompile 'org.spockframework:spock-spring'
+    testCompile 'com.jayway.jsonpath:json-path'
+}
+
+springBoot {
+    mainClass = 'com.test.lunch.Application'
+}

@@ -1,0 +1,66 @@
+Admin:
+
+try security with not-admin user
+try actions without user
+
+with admin:
+list empty users
+list users
+create user
+get user
+get null user
+get not exsisting user
+repeatable create user
+create invalid user
+create empty user
+update user name/password/roles
+delete user
+delete not exsist user
+delete null user
+
+
+list empty restaurants
+list restaurants
+get restaurant
+get null restaurant
+get not exsisting restaurant
+create restaurant
+repeatable create restaurant
+create invalid restaurant
+create empty restaurant
+update restaurant name
+delete restaurant
+delete not exsist restaurant
+delete null restaurant
+
+// the same with dishes
+
+list empty menus
+list menus of exsisting restaurant
+list menus of not-exsisting restaurant
+list menus of null restaurant
+get menu
+get null menu
+get not exsisting menu
+create menu
+repeatable create menu
+create invalid menu (null or not exsist restaurant, dish, negative price etc)
+create empty menu
+update menu - should be forbidden
+delete menu
+delete not exsist menu
+delete null menu
+
+with user:
+try actions with admin user
+try actions without user
+
+list restaurants
+get restaurant todays menu
+vote for restaurant
+vote again for restaurant in time
+vote again for restaurant out of time
+watch vote results
+
+
+
