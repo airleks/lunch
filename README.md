@@ -27,4 +27,4 @@ REST API test
 
 /api/restaurants/{restaurant id} (PUT) - vote for restaurant
 
-See test cases for details.
+
