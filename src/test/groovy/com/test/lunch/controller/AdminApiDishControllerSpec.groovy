@@ -22,6 +22,7 @@ import javax.servlet.Filter
 import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.contains
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 
@@ -59,7 +60,7 @@ class AdminApiDishControllerSpec extends Specification
                 dishes.each{d -> dishRepository.save(new DishModel(d))}
 
         when:
-                def response = this.mockMvc.perform(new MockHttpServletRequestBuilder(requestType, url)
+                def response = this.mockMvc.perform(get('/api/admin/dishes')
                                                     .with(user('testadmin').password('testpass').roles('ADMIN'))
                                                     .accept(MediaType.APPLICATION_JSON))
                                                     .andDo(print())
@@ -73,10 +74,35 @@ class AdminApiDishControllerSpec extends Specification
                dishRepository.deleteAll()
 
         where:
-               dishes                     | url                         | requestType       |  responseStatus       | validations
-               []                         | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
-               ['dish 1']                 | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].title').value('dish 1')]
-               ['dish 1', 'dish 2']       | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].title').value(contains('dish 1', 'dish 2'))]
+               dishes                     | responseStatus       | validations
+               []                         | HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
+               ['dish 1']                 | HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].title').value('dish 1')]
+               ['dish 1', 'dish 2']       | HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].title').value(contains('dish 1', 'dish 2'))]
     }
 
+    def "Test dish get api"()
+    {
+        given:
+            def ids = dishes ? dishes.collect { d -> dishRepository.save(new DishModel(d)).id } : null
+            def id =  ids ? ids[offset] : 1
+        when:
+            def response = this.mockMvc.perform(get("/api/admin/dishes/${id}")
+                    .with(user('testadmin').password('testpass').roles('ADMIN'))
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+        then:
+            response
+                    .andExpect(status().is(responseStatus.value()))
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            if (validations) validations.each{ v -> response.andExpect(v) }
+
+        cleanup:
+            dishRepository.deleteAll()
+
+        where:
+            dishes                     | offset | responseStatus       | validations
+            null                       | 1      | HttpStatus.NOT_FOUND | null
+            ['dish 1']                 | 0      | HttpStatus.OK        | [jsonPath('$').exists(),jsonPath('$.title').value('dish 1')]
+            ['dish 1', 'dish 2']       | 1      | HttpStatus.OK        | [jsonPath('$').exists(),jsonPath('$.title').value('dish 2')]
+    }
 }

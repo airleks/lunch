@@ -1,6 +1,7 @@
 package com.test.lunch.controller;
 
 import com.google.common.collect.Lists;
+import com.test.lunch.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,14 @@ public abstract class AbstractCrudController<T extends Persistable, ID extends S
 
     public T get(ID id)
     {
-        return getRepository().findOne(id);
+        T entity = getRepository().findOne(id);
+
+        if (entity == null)
+        {
+            throw new ResourceNotFoundException(String.format("Item [id=%s] not found", id));
+        }
+
+        return entity;
     }
 
     public ResponseEntity<T> create(T model)
