@@ -4,8 +4,8 @@ try security with not-admin user
 try actions without user
 
 with admin:
-list empty users
-list users
++list empty users
++list users
 create user
 get user
 get null user
@@ -19,8 +19,8 @@ delete not exsist user
 delete null user
 
 
-list empty restaurants
-list restaurants
++list empty restaurants
++list restaurants
 get restaurant
 get null restaurant
 get not exsisting restaurant
@@ -55,7 +55,7 @@ with user:
 try actions with admin user
 try actions without user
 
-list restaurants
+get vote stats
 get restaurant todays menu
 vote for restaurant
 vote again for restaurant in time

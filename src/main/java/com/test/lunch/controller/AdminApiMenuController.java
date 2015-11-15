@@ -24,10 +24,10 @@ public class AdminApiMenuController
     public RestaurantMenuData list(@PathVariable("restaurantId") Long restaurantId,
                           @PathVariable("date") @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) Date date)
     {
-        return menuService.getRestaurantMenu(restaurantId, date); // todo check response status
+        return menuService.getRestaurantMenu(restaurantId, date);
     }
 
-    @RequestMapping(value = "/{restaurantId}/{date}/{dishId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{restaurantId}/{date}/{dishId}", method = RequestMethod.PUT)
     public ResponseEntity<?> create(@PathVariable("restaurantId") Long restaurantId,
                                     @PathVariable("date") @DateTimeFormat(iso= DateTimeFormat.ISO.DATE) Date date,
                                     @PathVariable("dishId") Long dishId,

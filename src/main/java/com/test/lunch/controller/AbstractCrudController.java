@@ -10,11 +10,15 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * Default crud-controller implementation
+ * Default crud-controller implementation (more simpler way - to use @RepositoryRestResource)
  */
 public abstract class AbstractCrudController<T extends Persistable, ID extends Serializable>
 {
-    // todo javadoc
+    /**
+     * Find all items of type T (w\o paging and ordering)
+     *
+     * @return
+     */
     public Collection<T> list()
     {
         return Lists.newArrayList(getRepository().findAll());

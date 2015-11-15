@@ -1,10 +1,13 @@
 package com.test.lunch.controller
 
 import com.test.lunch.ApplicationConfig
-import org.apache.tomcat.util.security.MD5Encoder
+import com.test.lunch.SecurityConfig
+import com.test.lunch.model.DishModel
+import com.test.lunch.repository.DishRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationContextLoader
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
@@ -17,60 +20,63 @@ import spock.lang.Specification
 import javax.servlet.Filter
 
 import static org.hamcrest.Matchers.hasSize
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.contains
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 
 /**
  *  AdminApiDishController tests
  */
 @ContextConfiguration(loader = SpringApplicationContextLoader,
-                      classes = [ApplicationConfig])
+                      classes = [ApplicationConfig,SecurityConfig])
 @WebAppConfiguration
 class AdminApiDishControllerSpec extends Specification
 {
     @Autowired
-    WebApplicationContext wac;
+    WebApplicationContext wac
 
     @Autowired
     Filter springSecurityFilterChain
 
-    MockMvc mockMvc;
+    @Autowired
+    DishRepository dishRepository
+
+    MockMvc mockMvc
 
     def setup()
     {
         mockMvc = MockMvcBuilders
                     .webAppContextSetup(this.wac)
                     .addFilters(springSecurityFilterChain)
-                    .build();
+                    .build()
     }
 
 
-//    def "Non-admin users are not allowed to use dish management api"()
-//    {
-//        when: "User with given url"
-//                def response = this.mockMvc.perform(new MockHttpServletRequestBuilder(methodType, url)
-//                        .with(user(username).password(MD5Encoder.encode(userpass.bytes)).roles(userrole))
-//                        .accept(MediaType.APPLICATION_JSON))
-//        then: "He gets access error"
-//            response
-//                .andExpect(status().isNotAcceptable())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath('$', hasSize(1)))
-//        where:
-//                username | userpass | userrole | url | methodType
-//                'test' | 'password' | 'USER' | "/api/v1/admin/dishes" | HttpMethod.GET
-//    }
-
-    def "Empty array should be returned when there are no dishes"()
+    def "Test dishes list api"()
     {
-        when: "Admin list dishes on empty DB"
-                def response = this.mockMvc.perform(get("/api/v1/admin/dishes")
-                                                    .with(user('testadmin')).accept(MediaType.APPLICATION_JSON))
-        then: "He gets empty array"
+        given:
+                dishes.each{d -> dishRepository.save(new DishModel(d))}
+
+        when:
+                def response = this.mockMvc.perform(new MockHttpServletRequestBuilder(requestType, url)
+                                                    .with(user('testadmin').password('testpass').roles('ADMIN'))
+                                                    .accept(MediaType.APPLICATION_JSON))
+                                                    .andDo(print())
+        then:
                response
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath('$', hasSize(0)))
+                    .andExpect(status().is(responseStatus.value()))
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+               validations.each{ v -> response.andExpect(v) }
+
+        cleanup:
+               dishRepository.deleteAll()
+
+        where:
+               dishes                     | url                         | requestType       |  responseStatus       | validations
+               []                         | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
+               ['dish 1']                 | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].title').value('dish 1')]
+               ['dish 1', 'dish 2']       | '/api/admin/dishes'         | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].title').value(contains('dish 1', 'dish 2'))]
     }
 
 }

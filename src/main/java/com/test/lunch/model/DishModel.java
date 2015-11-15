@@ -19,7 +19,7 @@ public class DishModel extends BasicModel<Long>
     @NotEmpty
     private String title;
 
-    @OneToMany(mappedBy = "dish") // todo cascade
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "dish")
     private Set<MenuModel> menus;
 
     public DishModel()

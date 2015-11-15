@@ -11,7 +11,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties("password")
+@JsonIgnoreProperties({"password","votes"})
 public class UserModel extends BasicModel<Long>
 {
     private static final long serialVersionUID = 2803137463535188619L;

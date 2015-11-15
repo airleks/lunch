@@ -63,6 +63,7 @@ public class VoteService
     }
 
     /**
+     * Vote for restaurant
      *
      * @param userName customer name
      * @param restaurantId id of restaurant customer voting for

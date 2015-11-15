@@ -14,7 +14,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "restaurants")
-@JsonIgnoreProperties({"votes","menus"})
+@JsonIgnoreProperties({"menus","votes"})
 public class RestaurantModel extends BasicModel<Long>
 {
     private static final long serialVersionUID = -8279775271439516469L;

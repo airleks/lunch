@@ -22,21 +22,21 @@ public class CommonResourceExceptionsHandler
     @ResponseStatus(HttpStatus.NOT_MODIFIED)
     public @ResponseBody ErrorData handleResourcModificationException(ResourceModificationException e)
     {
-        return new ErrorData(e.getMessage(), new Date()); // todo review
+        return new ErrorData(e.getMessage(), new Date());
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody ErrorData handleResourceNotFoundException(ResourceNotFoundException e)
     {
-        return new ErrorData(e.getMessage(), new Date()); // todo review
+        return new ErrorData(e.getMessage(), new Date());
     }
 
     @ExceptionHandler(ResourcePathException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public @ResponseBody ErrorData handleResourcePathException(ResourcePathException e)
     {
-        return new ErrorData(e.getMessage(), new Date()); // todo review
+        return new ErrorData(e.getMessage(), new Date());
     }
 
     // todo handle Bad Request

@@ -1,6 +1,7 @@
 package com.test.lunch.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -29,7 +30,7 @@ public class MenuModel extends BasicModel<Long>
     private DishModel dish;
 
     @NotNull
-   // todo @Min(0)
+    @Min(0)
     private Double price;
 
     public MenuModel()

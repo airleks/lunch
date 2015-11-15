@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +29,9 @@ public class CustomUserDetailsService implements UserDetailsService
     private String defaultAdminPassword;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
 
     private UserModel defaultAdmin;
@@ -35,7 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService
     @PostConstruct
     public void init()
     {
-        defaultAdmin = new UserModel(defaultAdminName, defaultAdminPassword, true);
+        defaultAdmin = new UserModel(defaultAdminName, passwordEncoder.encode(defaultAdminPassword), true);
     }
 
     @Override
