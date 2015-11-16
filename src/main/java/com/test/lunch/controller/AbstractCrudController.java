@@ -11,21 +11,30 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
- * Default crud-controller implementation (more simpler way - to use @RepositoryRestResource)
+ * Default crud-controller implementation (more simple way is to use @RepositoryRestResource)
  */
 public abstract class AbstractCrudController<T extends Persistable, ID extends Serializable>
 {
     /**
      * Find all items of type T (w\o paging and ordering)
      *
-     * @return
+     * @return list of items
      */
     public Collection<T> list()
     {
         return Lists.newArrayList(getRepository().findAll());
     }
 
-    public T get(ID id)
+    /**
+     * Get item by id
+     *
+     * @param id id
+     *
+     * @return item
+     *
+     * @throws ResourceNotFoundException if no item found
+     */
+    public T get(ID id) throws ResourceNotFoundException
     {
         T entity = getRepository().findOne(id);
 
@@ -37,6 +46,13 @@ public abstract class AbstractCrudController<T extends Persistable, ID extends S
         return entity;
     }
 
+    /**
+     * Create or update item
+     *
+     * @param model item
+     *
+     * @return response entity
+     */
     public ResponseEntity<T> create(T model)
     {
         HttpStatus status = model.isNew() ? HttpStatus.CREATED : HttpStatus.OK;
@@ -46,6 +62,14 @@ public abstract class AbstractCrudController<T extends Persistable, ID extends S
         return new ResponseEntity<>(saved, status);
     }
 
+    /**
+     * Create or update item
+     *
+     * @param id item id
+     * @param model item
+     *
+     * @return response entity
+     */
     public ResponseEntity<?> update(ID id, T model)
     {
         if (!getRepository().exists(id))
@@ -58,6 +82,13 @@ public abstract class AbstractCrudController<T extends Persistable, ID extends S
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
+    /**
+     * Delete item by id
+     *
+     * @param id item id
+     *
+     * @return response entity
+     */
     public ResponseEntity<?> delete(ID id)
     {
         HttpStatus status = getRepository().exists(id) ? HttpStatus.OK : HttpStatus.NOT_FOUND;
@@ -67,5 +98,10 @@ public abstract class AbstractCrudController<T extends Persistable, ID extends S
         return new ResponseEntity<>(status);
     }
 
-    public abstract <S extends CrudRepository<T,ID>> S getRepository();
+    /**
+     * Get controller data repository
+     *
+     * @return data repository
+     */
+    public abstract CrudRepository<T,ID> getRepository();
 }

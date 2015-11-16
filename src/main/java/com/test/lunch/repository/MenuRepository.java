@@ -4,10 +4,8 @@ import com.test.lunch.model.DishModel;
 import com.test.lunch.model.MenuModel;
 import com.test.lunch.model.RestaurantModel;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 

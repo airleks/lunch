@@ -3,7 +3,6 @@ package com.test.lunch.controller;
 import com.test.lunch.data.RestaurantMenuData;
 import com.test.lunch.data.VoteResultsData;
 import com.test.lunch.model.VoteModel;
-import com.test.lunch.repository.RestaurantRepository;
 import com.test.lunch.service.MenuService;
 import com.test.lunch.service.VoteService;
 import org.springframework.beans.factory.annotation.Autowired;

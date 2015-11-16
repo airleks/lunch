@@ -6,25 +6,23 @@ import com.test.lunch.model.DishModel
 import com.test.lunch.repository.DishRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.SpringApplicationContextLoader
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.web.WebAppConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import spock.lang.Specification
 
 import javax.servlet.Filter
 
-import static org.hamcrest.Matchers.hasSize
 import static org.hamcrest.Matchers.contains
+import static org.hamcrest.Matchers.hasSize
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 
 /**
  *  AdminApiDishController tests
@@ -60,7 +58,7 @@ class AdminApiDishControllerSpec extends Specification
                 dishes.each{d -> dishRepository.save(new DishModel(d))}
 
         when:
-                def response = this.mockMvc.perform(get('/api/admin/dishes')
+                def response = this.mockMvc.perform(get('https://localhost:8443/api/admin/dishes')
                                                     .with(user('testadmin').password('testpass').roles('ADMIN'))
                                                     .accept(MediaType.APPLICATION_JSON))
                                                     .andDo(print())
@@ -86,7 +84,7 @@ class AdminApiDishControllerSpec extends Specification
             def ids = dishes ? dishes.collect { d -> dishRepository.save(new DishModel(d)).id } : null
             def id =  ids ? ids[offset] : 1
         when:
-            def response = this.mockMvc.perform(get("/api/admin/dishes/${id}")
+            def response = this.mockMvc.perform(get("https://localhost:8443/api/admin/dishes/${id}")
                     .with(user('testadmin').password('testpass').roles('ADMIN'))
                     .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())

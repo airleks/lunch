@@ -74,9 +74,9 @@ class AdminApiRestaurantControllerSpec extends Specification
 
         where:
             restaurants                | url                         | requestType       |  responseStatus       | validations
-            []                         | '/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
-            ['res 1']                  | '/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].name').value('res 1')]
-            ['res 1', 'res 2']         | '/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].name').value(contains('res 1', 'res 2'))]
+            []                         | 'https://localhost:8443/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
+            ['res 1']                  | 'https://localhost:8443/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].name').value('res 1')]
+            ['res 1', 'res 2']         | 'https://localhost:8443/api/admin/restaurants'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].name').value(contains('res 1', 'res 2'))]
     }
 
 }

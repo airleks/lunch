@@ -76,9 +76,9 @@ class AdminApiUserControllerSpec extends Specification
 
         where:
             users                      | url                         | requestType       |  responseStatus       | validations
-            []                         | '/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
-            ['user 1']                 | '/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].login').value('user 1')]
-            ['user 1', 'user 2']       | '/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].login').value(contains('user 1', 'user 2'))]
+            []                         | 'https://localhost:8443/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(0))]
+            ['user 1']                 | 'https://localhost:8443/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(1)),jsonPath('$[0].login').value('user 1')]
+            ['user 1', 'user 2']       | 'https://localhost:8443/api/admin/users'    | HttpMethod.GET    |  HttpStatus.OK        | [jsonPath('$').isArray(),jsonPath('$', hasSize(2)),jsonPath('$[*].login').value(contains('user 1', 'user 2'))]
     }
 
 }

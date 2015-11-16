@@ -1,7 +1,6 @@
 package com.test.lunch.repository;
 
 import com.test.lunch.data.VoteResultEntryData;
-import com.test.lunch.model.UserModel;
 import com.test.lunch.model.VoteModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

@@ -3,7 +3,6 @@ package com.test.lunch;
 import com.test.lunch.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.channel.ChannelDecisionManagerImpl;
 
 /**
  * Application security config
@@ -47,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .authorizeRequests().antMatchers("/api/admin", "/api/admin/**").hasRole("ADMIN")
                     .and()
                 .authorizeRequests().antMatchers("/api/restaurants", "/api/restaurants/**").hasRole("USER")
+                    .and()
+                .requiresChannel().anyRequest().requiresSecure()
                     .and()
                 .csrf().disable();
     }
